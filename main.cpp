@@ -76,7 +76,7 @@ class NodeABB {
         }
 };
 
-
+// TODO : Se debe limpiar el codigo y ordenar mas las condiciones. 
 class NodeSplay {
     public: 
         int value = -1; 
@@ -274,7 +274,7 @@ class NodeSplay {
 
 };
 
-
+// quiza cambiar la implementacion de delete.
 class SplayTree {
     public:
        
@@ -335,6 +335,7 @@ int main(){
     }
     tree->search(5);
     tree->root->imprimirGrafico();
+    delete tree;
 }
 
 
