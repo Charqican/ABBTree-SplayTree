@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <iomanip> 
+#include <cmath>
 
 // usare clases para encapsular la logica de liberar memoria y splay() 
 class NodeABB {
@@ -76,97 +77,129 @@ class NodeABB {
 };
 
 
-class NodeSPlay {
+class NodeSplay {
     public: 
         int value = -1; 
-        NodeSPlay* izq = nullptr;
-        NodeSPlay* der = nullptr;
-        NodeSPlay* parent = nullptr;
-        NodeSPlay(int v) : value(v) {}
-        NodeSPlay() {}
+        NodeSplay* izq = nullptr;
+        NodeSplay* der = nullptr;
+        NodeSplay* parent = nullptr;
+        NodeSplay(int v) : value(v) {}
 
-        ~NodeSPlay() {
-            delete izq;
-            delete der;
+        ~NodeSplay() {
+            if (izq!=nullptr) delete izq;
+            if (der!= nullptr) delete der;
         }
 
-        bool search(int element) {
-            //caso nodo inicializado vacio
-            if (value == -1) return false;
+        NodeSplay* search(int element) {
             // casos bases 
-            if (value == element) this->splay(); return true;
+            if (value == element) {
+                this->splay();
+                return this;
+            }
             // revisar izq y der
-            bool l = false;
-            bool r = false;
-            if (izq != nullptr) l = izq->search(element);
-            if (der != nullptr) r = der->search(element);
-            return (l || r);
+            if (izq != nullptr) {
+                NodeSplay* l = izq->search(element);
+                if (l!= nullptr) return l;
+            }
+
+            if (der != nullptr) {
+                NodeSplay* r = der->search(element);
+                if (r!= nullptr) return r;
+            } 
+            return nullptr;
         }
 
 
-        void insert(int element) {
-            // si value es vacio, insertamos en este nodo. // caso para nodo inicializado vacio (root).
-            if (value == -1 or value == element) {
-                value = element;
-                return;
+        NodeSplay* insert(int element) {
+            // si value es vacio, insertamos en este nodo.
+            // caso para nodo inicializado vacio (root).
+            if (value == element) {
+                return nullptr;
+                std::cout<< "Insert: Value was the same: " << element << std::endl;
             }
 
             // si e < value: insertamos en el arbol de la izquierda
             if (element < value) {
                 // si el nodo no existe, fallamos la busqueda -> insertamos y hacemos splay()
                 if (izq == nullptr){
-                    izq = new NodeSPlay(element);
-                    izq->parent = this;
-                    izq->splay();
-                    return;
-                } else izq->insert(element);
+                    izq = new NodeSplay(element); // creamos el nodo de la izquierda
+                    izq->parent = this; // seteamos el parent
+                    NodeSplay* newRoot = izq; // el nodo apunto hacia otro lado, hacemos una copia.
+                    izq->splay(); // le aplicamos splay a este nodo // 
+                    return newRoot;
+
+                } else { // si no, seguimos recursivamente
+                    return izq->insert(element); 
+                }
+
+            } else { // si e > value: insertamos en el arbol de la derecha
+                if (der == nullptr) {
+                    der = new NodeSplay(element);
+                    der->parent = this;
+                    NodeSplay* newRoot = der; // el nodo apunto hacia otro lado, hacemos una copia.
+                    der->splay();
+                    return newRoot;
+                } else {
+                    return der->insert(element);
+                } 
             }
-            // si e > value: insertamos en el arbol de la derecha
-            if (der == nullptr){
-                der = new NodeSPlay(element);
-                der->parent = this;
-                der->splay();
-                return;
-            } else der->insert(element);
-    }
+            
+        }
 
-
-        void imprimirGrafico(int espacio = 0, int nivel = 5) {
+        
+        // cortesia de chatgpt
+        void imprimirGrafico(int espacio = 0, bool esIzquierdo = false, const std::string& prefijo = "") {
             if (this == nullptr) {
                 return;
             }
 
-            // Aumentamos el espacio entre niveles
-            espacio += nivel;
-
-            // Primero procesamos el subárbol derecho
+            // Procesamos el subárbol derecho primero
             if (der != nullptr) {
-                der->imprimirGrafico(espacio);
+                der->imprimirGrafico(espacio + 1, false, prefijo + (esIzquierdo ? "│   " : "    "));
+            } else {
+                // Imprimimos el subárbol derecho nulo como $
+                std::string repetido(std::log10(value), ' ');
+                std::cout << prefijo + (esIzquierdo ? "│   " : "    ") + repetido +"┌──$" << std::endl;
             }
 
-            // Imprimimos el nodo actual después de los espacios
-            std::cout << std::endl;
-            std::cout << std::setw(espacio) << value << std::endl;
+            // Imprimimos el nodo actual
+            std::cout << prefijo;
 
-            // Luego procesamos el subárbol izquierdo
+            if (esIzquierdo) {
+                std::cout << "└── ";
+            } else {
+                std::cout << "┌── ";
+            }
+
+            std::cout << value << std::endl;
+
+            // Procesamos el subárbol izquierdo
             if (izq != nullptr) {
-                izq->imprimirGrafico(espacio);
+                izq->imprimirGrafico(espacio + 1, true, prefijo + (esIzquierdo ? "    " : "│   "));
+            } else {
+                // Imprimimos el subárbol izquierdo nulo como $
+                std::string repetido(std::log10(value) , ' ');
+
+                std::cout << prefijo + (esIzquierdo ? "    " : "│   ") + repetido+"└── $" << std::endl;
             }
         }
-    
     private:
 
         void splay() {
-            NodeSPlay* y = this->parent;
+            NodeSplay* y = this->parent;
             if (y == nullptr) { // caso base
                 return;
             }
-            NodeSPlay* z = y->parent;
+            NodeSplay* z = y->parent;
             int a = y->value;
             // caso zig y zag
             if (z == nullptr) {
-                if (this->value < a) zig(); return;
-                zag(); return;
+                if (this->value < a) {
+                    zig();
+                    return;
+                }
+                zag(); 
+                return;
             }
             int b = z->value;
 
@@ -177,97 +210,108 @@ class NodeSPlay {
             splay();
         }
 
-        void splay2() { // a priori utilizare solo zig y zag
-
-            // casos bases de la recursion.
-            if (parent == nullptr) {
-                return;
-            }
-
-            // x: elemento, y: padre, z: padre del padre
-            // sabemos que al menos y existe
-            NodeSPlay* y = this->parent;
-            NodeSPlay* z = y->parent; // puede ser nulo
-
-            // caso de que y sea raiz
-            if (z == nullptr) {
-                if (value > parent->value) {
-                        zag();
-                        return;
-                    }
-                    zig();
-                    return;
-            } 
-
-            // de otra forma: Primera operación
-            if (y->value < z->value) {
-                y->zig();
-            } else {
-                y->zag();
-            }
-            // Segunda operacion
-            if (this->value < y->value) {
-                this->zig();
-            }else {
-                this->zag();
-            }
-            // llamada recursiva hasta que lleguemos a la raiz
-            splay2();
-        }
-
         // creo que no es necesario implementar las 6, pero el enunciado asi lo pedia.
         void zigZig() {
             // asumimos la existencia de y, z
-            NodeSPlay* y = this->parent;
-            y->zig(); this->zag();
+            this->zig();
+            this->zig();
         }
 
         void zigZag() {
-            NodeSPlay* y = this->parent;
-            y->zig(); this->zag();
+            this->zag();
+            this->zig();
         }
 
         void zagZig() {
-            NodeSPlay* y = this->parent;
-            y->zag(); this->zig();
+            this->zig();
+            this->zag();
         }
 
         void zagZag() {
-            NodeSPlay* y = this->parent;
-            y->zag(); this->zag();
+            this->zag();
+            this->zag();
         }
 
+        //y(a, x(b, c)) -> x(y(a, b), c)
         void zag() {
-            NodeSPlay* y = this->parent;
-            NodeSPlay* yParent =  y->parent;
+            std::cout <<"Zag" << std::endl;
+            NodeSplay* y = this->parent;
+            NodeSplay* yParent =  y->parent;
 
-            // subimos x
+            if(yParent != nullptr) {
+                // caso compuesto: z(y, ...) -> z(x, ...)
+                if (yParent->izq == y) yParent->izq = this;
+                // z(..., y) -> z(..., x)
+                else yParent->der = this;
+            }
+
             this->parent = yParent;
-            y->parent = this;
-
-            // reconecatmos los hijos
-            NodeSPlay* izqTemp = this->izq;
-            this->izq = y;
-            y->der = izqTemp;
+            y->der = this->izq; //y(a, b)
+            if (this->izq != nullptr) this->izq->parent = y; // b->y
+            this->izq = y; // x(y(a,b), c)
+            y->parent = this; //y->x
         }
 
+        //y(this(a, b), c)-> x(a, y(b, c))
+        // esto se utiliza en dos casos, en un zig() comun y en una operacion compuesta
         void zig() {
-            NodeSPlay* y = this->parent;
-            NodeSPlay* yParent = y->parent;
+            std::cout <<"Zig" << std::endl;
+            NodeSplay* y = this->parent;
+            NodeSplay* yParent = y->parent;
 
-            // subimos x
-            this->parent = yParent;
-            y->parent = this;
-
-            // reconectar los hijos
-            NodeSPlay* derTemp = this->der;
-            this->der = y;
-            y->izq = derTemp;
+            if(yParent != nullptr) {
+                // caso compuesto: z(y, ...) -> z(x, ...)
+                if (yParent->izq == y) yParent->izq = this;
+                // z(..., y) -> z(..., x)
+                else yParent->der = this;
+            }
+            this->parent = yParent; 
+            y->izq = this->der; //y(b, c)
+            if (this->der != nullptr) this->der->parent = y; // b -> y
+            this->der = y; // x(a, y(b, c))
+            y->parent = this; //y->x
         }
 
 };
 
 
+class SplayTree {
+    public:
+       
+        NodeSplay* root = nullptr;
+        // construye el nodo root con un valor y recupera un puntero al puntero del nodo.
+
+        SplayTree() {
+        }
+
+        // wrapper para insert de esta clase.
+        void insert(int element) {
+            if (root == nullptr) {
+                root = new NodeSplay(element);
+                return;
+            }
+            NodeSplay* newRoot = root->insert(element);
+            if (newRoot == nullptr) {
+                std::cout << "insert Failed " << std::endl; 
+                return;
+            } 
+            
+            root = newRoot;
+        }
+
+        bool search(int element) {
+            if (root == nullptr) return false;
+            NodeSplay* newRoot = root->search(element);
+            if (newRoot == nullptr) return false; // fallo la busqueda
+            root = newRoot;
+            return true;
+        }
+
+        ~SplayTree() { // dijo mi amigo chatgpt q era ineficiente esto.
+            if (root != nullptr) delete root;
+        }
+
+};
 
 int main(){
     // test de ABB tree
@@ -279,22 +323,18 @@ int main(){
         // search
         std::cout << root->search(a[i]) << " ";
     }
-    // fail search
-    //std::cout << std::endl << root->search(100);
-    //std::cout << "------------------------------------" << std::endl;
-    //root->imprimirGrafico();
     std::cout << "------------------------------------" << std::endl;
-
-    NodeSPlay* rootsp = new NodeSPlay(5);
-
-    std::vector<int> b = {10, 5};
+    delete root;
+    SplayTree* tree = new SplayTree();
+    std::vector<int> b = {5, 8, 10, 9, 2};
     for (int c : b) {
         // insert
-        rootsp->insert(c);
-        std::cout << "------------------------------------" << std::endl;
-        rootsp->imprimirGrafico();
-        std::cout << "------------------------------------" << std::endl;
+        tree->insert(c);
+        tree->root->imprimirGrafico();
+        std::cout<<"--------------------------------------------" << std::endl;
     }
+    tree->search(5);
+    tree->root->imprimirGrafico();
 }
 
 
