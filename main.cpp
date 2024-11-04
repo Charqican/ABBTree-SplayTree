@@ -78,8 +78,10 @@ class NodeABB {
 
 // TODO : Se debe limpiar el codigo y ordenar mas las condiciones. 
 class NodeSplay {
+    // Esta implementacion utiliza 3 punteros a nodos :
+    // Primero tenemos 
     public: 
-        int value = -1; 
+        int value = -1; // caso de nodos no inizializados con valor, al final ni lo uso
         NodeSplay* izq = nullptr;
         NodeSplay* der = nullptr;
         NodeSplay* parent = nullptr;
@@ -125,6 +127,7 @@ class NodeSplay {
                     izq = new NodeSplay(element); // creamos el nodo de la izquierda
                     izq->parent = this; // seteamos el parent
                     NodeSplay* newRoot = izq; // el nodo apunto hacia otro lado, hacemos una copia.
+                    std::cout<< "Insert: " << element << std::endl;
                     izq->splay(); // le aplicamos splay a este nodo // 
                     return newRoot;
 
@@ -137,6 +140,7 @@ class NodeSplay {
                     der = new NodeSplay(element);
                     der->parent = this;
                     NodeSplay* newRoot = der; // el nodo apunto hacia otro lado, hacemos una copia.
+                    std::cout<< "Insert: " << element << std::endl;
                     der->splay();
                     return newRoot;
                 } else {
@@ -146,6 +150,13 @@ class NodeSplay {
             
         }
 
+        void callImprimirGrafico() {
+            if (this->parent != nullptr) {
+                this->parent->callImprimirGrafico();
+            } else {
+                imprimirGrafico();
+            }
+        }
         
         // cortesia de chatgpt
         void imprimirGrafico(int espacio = 0, bool esIzquierdo = false, const std::string& prefijo = "") {
@@ -180,7 +191,7 @@ class NodeSplay {
                 // Imprimimos el subárbol izquierdo nulo como $
                 std::string repetido(std::log10(value) , ' ');
 
-                std::cout << prefijo + (esIzquierdo ? "    " : "│   ") + repetido+"└── $" << std::endl;
+                std::cout << prefijo + (esIzquierdo ? "    " : "│   ") + repetido+"└──$" << std::endl;
             }
         }
     private:
@@ -234,42 +245,47 @@ class NodeSplay {
 
         //y(a, x(b, c)) -> x(y(a, b), c)
         void zag() {
-            std::cout <<"Zag" << std::endl;
+            callImprimirGrafico();
+            std::cout <<"Zag: "<< this->value<< std::endl;
             NodeSplay* y = this->parent;
             NodeSplay* yParent =  y->parent;
 
+            // conectaremos los hijos de x a y
+            this->parent = yParent;
+            y->der = this->izq; // y(a, x(b, c)) -> y(a, b). 
+            if (this->izq != nullptr) this->izq->parent = y; //modificar parent de b
+            this->izq = y; // x(b, c) -> x(y(a, b), c)
+            y->parent = this; // modificamos el parent de b
+
             if(yParent != nullptr) {
                 // caso compuesto: z(y, ...) -> z(x, ...)
                 if (yParent->izq == y) yParent->izq = this;
                 // z(..., y) -> z(..., x)
                 else yParent->der = this;
             }
-
-            this->parent = yParent;
-            y->der = this->izq; //y(a, b)
-            if (this->izq != nullptr) this->izq->parent = y; // b->y
-            this->izq = y; // x(y(a,b), c)
-            y->parent = this; //y->x
+            
         }
 
-        //y(this(a, b), c)-> x(a, y(b, c))
-        // esto se utiliza en dos casos, en un zig() comun y en una operacion compuesta
+        // y(x(a, b), c)-> x(a, y(b, c))
         void zig() {
-            std::cout <<"Zig" << std::endl;
-            NodeSplay* y = this->parent;
-            NodeSplay* yParent = y->parent;
+            callImprimirGrafico();
+            std::cout <<"Zig: " <<this->value << std::endl;
+            NodeSplay* y = this->parent; // y parent de x
+            NodeSplay* yParent = y->parent; // z abuelo de x, puede ser null.
 
-            if(yParent != nullptr) {
-                // caso compuesto: z(y, ...) -> z(x, ...)
-                if (yParent->izq == y) yParent->izq = this;
-                // z(..., y) -> z(..., x)
-                else yParent->der = this;
-            }
             this->parent = yParent; 
             y->izq = this->der; //y(b, c)
             if (this->der != nullptr) this->der->parent = y; // b -> y
             this->der = y; // x(a, y(b, c))
             y->parent = this; //y->x
+
+            if(yParent != nullptr) {
+                // caso compuesto: z(y, ...) -> z(x, ...)
+                if (yParent->izq == y) yParent->izq = this;
+                // z(..., y) -> z(..., x)
+                else yParent->der = this;
+            }
+            
         }
 
 };
@@ -330,11 +346,11 @@ int main(){
     for (int c : b) {
         // insert
         tree->insert(c);
-        tree->root->imprimirGrafico();
+        tree->root->imprimirGrafico(); // para mostrar el estado f inal
         std::cout<<"--------------------------------------------" << std::endl;
     }
     tree->search(5);
-    tree->root->imprimirGrafico();
+    tree->root->imprimirGrafico(); // muestra el estado final
     delete tree;
 }
 
