@@ -7,8 +7,6 @@
 #include "./SplayTree.cpp"
 
 
-
-
 int main(){
     // test de ABB tree
     NodeABB* root = new NodeABB();
@@ -32,4 +30,8 @@ int main(){
     tree->search(5);
     tree->root->imprimirGrafico(); // muestra el estado final
     delete tree;
+}
+
+void firstExperiment(int N) {
+    
 }

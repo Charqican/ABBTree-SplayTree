@@ -4,7 +4,6 @@
 #include <cmath>
 
 
-
 class NodeABB {
     public:
         int value = -1;

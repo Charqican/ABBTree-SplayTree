@@ -89,7 +89,7 @@ class NodeSplay {
             }
         }
         
-        // cortesia de chatgpt
+
         void imprimirGrafico(int espacio = 0, bool esIzquierdo = false, const std::string& prefijo = "") {
             if (this == nullptr) {
                 return;
@@ -156,7 +156,13 @@ class NodeSplay {
         void zigZig() {
             // asumimos la existencia de y, z
             this->zig();
-            this->zig();
+            NodeSplay* z = this->parent;
+            NodeSplay* c = this->der->der;
+
+            this->parent = z->parent;
+            z->parent = this->der;
+            this->der->der = z;
+            z->izq = c;
         }
 
         void zigZag() {
@@ -171,7 +177,13 @@ class NodeSplay {
 
         void zagZag() {
             this->zag();
-            this->zag();
+            NodeSplay* z = this->parent;
+            NodeSplay* b = this->izq->izq;
+
+            this->parent = z->parent;
+            z->parent = this->izq;
+            this->izq->izq = z;
+            z->der = b;
         }
 
         //y(a, x(b, c)) -> x(y(a, b), c)
@@ -216,7 +228,6 @@ class NodeSplay {
                 // z(..., y) -> z(..., x)
                 else yParent->der = this;
             }
-            
         }
 
 };
