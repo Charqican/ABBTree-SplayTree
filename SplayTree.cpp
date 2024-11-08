@@ -14,7 +14,7 @@ class NodeSplay {
         NodeSplay* der = nullptr;
         NodeSplay* parent = nullptr;
         NodeSplay(int v) : value(v) {}
-
+        bool printTree = false;
         ~NodeSplay() {
             if (izq!=nullptr) delete izq;
             if (der!= nullptr) delete der;
@@ -81,6 +81,7 @@ class NodeSplay {
         }
 
         void callImprimirGrafico() {
+            if(!printTree) return;
             if (this->parent != nullptr) {
                 this->parent->callImprimirGrafico();
             } else {
