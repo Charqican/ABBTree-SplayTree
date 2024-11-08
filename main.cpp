@@ -5,9 +5,10 @@
 #include <cmath>
 #include "./NodeABB.cpp"
 #include "./SplayTree.cpp"
-
+#include "windows.h"
 
 int main(){
+    SetConsoleOutputCP(CP_UTF8);
     // test de ABB tree
     NodeABB* root = new NodeABB();
     std::vector<int> a = {10, 5, 3, 1, 8, 3, 8, 10, 3, 15, 17, 19, 6};
@@ -32,6 +33,5 @@ int main(){
     delete tree;
 }
 
-void firstExperiment(int N) {
-    
+void firstExperiment(int N) {    
 }
