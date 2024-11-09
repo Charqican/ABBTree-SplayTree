@@ -14,7 +14,6 @@ class NodeABB {
         NodeABB() {};
         NodeABB(int v) : value(v) {};
 
-        // La idea es crear nuevos nodos con new NodeABB, de esta forma los punteros no fallaran por scoping
         ~NodeABB() {
             // Usaremos una pila para hacer un recorrido iterativo
             std::stack<NodeABB*> nodeStack;
@@ -52,52 +51,55 @@ class NodeABB {
 
         bool iterativeSearch(int element) {
             NodeABB* current = this;
-            while(current!=nullptr) {
-                NodeABB* left = current->izq;
-                NodeABB* right = current->der;
-                
+            int iteration = 0;
+            while (current != nullptr) {
                 if (current->value == element) {
-                    return true;
-                    
-                } else if (current->value < element ) {
-                    current = left;
-
+                    return true;  
+                }
+                if (element < current->value) {
+                    current = current->izq;  
                 } else {
-                    current = right;
+                    current = current->der; 
                 }
             }
-            return false;
+            return false;  
         }
 
 
         void iterativeInsert(int element) {
+            // Caso especial: si el nodo raíz está vacío, lo inicializamos
             if (this->value == -1) {
                 value = element;
                 return;
             }
+
             NodeABB* current = this;
-            while(true) {
-                NodeABB* left = current->izq;
-                NodeABB* right = current->der;
-                if (current->value == element) {
-                    return;
-                    
-                } else if (current->value < element && left != nullptr ) {
-                    current = left;
+            while (true) {
+                if (element == current->value) {
+                    return;  // No insertamos elementos duplicados
+                }
 
-                } else if (current->value > element && right != nullptr) {
-                    current = right;
-
-                } else if (left == nullptr ) {
-                    current->izq = new NodeABB(element);
-                    return;
-
-                } else if (right == nullptr ) {
-                    current->der = new NodeABB(element);
-                    return;
+                // Si el elemento es menor, vamos al subárbol izquierdo
+                if (element < current->value) {
+                    if (current->izq == nullptr) {
+                        current->izq = new NodeABB(element);  // Insertar en la izquierda
+                        return;
+                    } else {
+                        current = current->izq;  // Continuar recorriendo la izquierda
+                    }
+                } 
+                // Si el elemento es mayor, vamos al subárbol derecho
+                else {
+                    if (current->der == nullptr) {
+                        current->der = new NodeABB(element);  // Insertar en la derecha
+                        return;
+                    } else {
+                        current = current->der;  // Continuar recorriendo la derecha
+                    }
                 }
             }
         }
+
 
         void insert(int element) {
             if (value == -1) {
