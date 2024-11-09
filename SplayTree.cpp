@@ -170,6 +170,7 @@ class NodeSplay {
             z->parent = this->der;
             this->der->der = z;
             z->izq = c;
+            if (c != nullptr) c->parent = z;
         }
 
         void zigZag() {
@@ -199,6 +200,7 @@ class NodeSplay {
             
             this->izq->izq = z;
             z->der = b;
+            if (b != nullptr) b->parent = z;
         }
 
         //y(a, x(b, c)) -> x(y(a, b), c)
