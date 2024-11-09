@@ -205,7 +205,7 @@ class NodeSplay {
 
         //y(a, x(b, c)) -> x(y(a, b), c)
         void zag() {
-            callImprimirGrafico();
+            //callImprimirGrafico();
             std::cout <<"Zag: "<< this->value<< std::endl;
             NodeSplay* y = this->parent;
             NodeSplay* yParent =  y->parent;
@@ -228,7 +228,7 @@ class NodeSplay {
 
         // y(x(a, b), c)-> x(a, y(b, c))
         void zig() {
-            callImprimirGrafico();
+            //callImprimirGrafico();
             std::cout <<"Zig: " <<this->value << std::endl;
             NodeSplay* y = this->parent; // y parent de x
             NodeSplay* yParent = y->parent; // z abuelo de x, puede ser null.
