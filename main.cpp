@@ -22,17 +22,68 @@ void debugTree() {
     tree->root->imprimirGrafico();
 }
 
+
+void debugTree2() {
+    SplayTree* tree = new SplayTree();
+    tree->insert(1);
+    tree->insert(14);
+    tree->insert(76);
+    tree->insert(46);
+    tree->insert(54);
+    tree->root->imprimirGrafico();
+    tree->search(76);
+    tree->search(1);
+    tree->root->imprimirGrafico();
+    tree->search(14);
+    tree->root->imprimirGrafico();
+    tree->search(54);
+    tree->root->imprimirGrafico();
+    tree->search(1);
+    tree->root->imprimirGrafico();
+    tree->search(76);
+    tree->root->imprimirGrafico();
+    tree->search(54);
+    tree->root->imprimirGrafico();
+    tree->search(46);
+    tree->root->imprimirGrafico();
+    tree->search(14);
+    tree->root->imprimirGrafico();
+    tree->search(54);
+    tree->root->imprimirGrafico();
+    tree->search(1);
+    tree->root->imprimirGrafico();
+    tree->search(54);
+    tree->root->imprimirGrafico();
+    tree->search(46);
+    tree->root->imprimirGrafico();
+    tree->search(54);
+    tree->root->imprimirGrafico();
+    tree->search(76);
+    tree->root->imprimirGrafico();
+    tree->search(1);
+    tree->root->imprimirGrafico();
+    tree->search(76);
+    tree->root->imprimirGrafico();
+    tree->search(46);
+    tree->root->imprimirGrafico();
+}
+
+
 int main(){
     SetConsoleOutputCP(CP_UTF8);
     // test de ABB tree
     NodeABB* root = new NodeABB();
     std::vector<int> a = {10, 5, 3, 1, 8, 3, 8, 10, 3, 15, 17, 19, 6};
+
+
     for (int i = 0; i < 10; i++) {
         // insert
-        root->insert(a[i]);
+        root->iterativeInsert(i);
         // search
-        std::cout << root->search(a[i]) << " ";
+        std::cout << root->iterativeSearch(i) << " ";
+        root->imprimirGrafico();
     }
+    delete root;
     //std::cout << "------------------------------------" << std::endl;
     //delete root;
     //SplayTree* tree = new SplayTree();
@@ -46,6 +97,6 @@ int main(){
     //tree->search(5);
     //tree->root->imprimirGrafico(); // muestra el estado final
     //delete tree;
-    debugTree();
+    //debugTree2();
 }
 
