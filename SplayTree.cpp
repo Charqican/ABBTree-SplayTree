@@ -158,7 +158,14 @@ class NodeSplay {
             this->zig();
             NodeSplay* z = this->parent;
             NodeSplay* c = this->der->der;
-
+            if (z->parent != nullptr) {
+                // si estamos a la derecha del abuelo
+                if (z->parent->value < z->value) {
+                    z->parent->der = this;
+                } else {
+                    z->parent->izq = this;
+                }
+            }
             this->parent = z->parent;
             z->parent = this->der;
             this->der->der = z;
@@ -179,9 +186,17 @@ class NodeSplay {
             this->zag();
             NodeSplay* z = this->parent;
             NodeSplay* b = this->izq->izq;
-
+            if (z->parent != nullptr) {
+                // si estamos a la derecha del abuelo
+                if (z->parent->value < z->value) {
+                    z->parent->der = this;
+                } else {
+                    z->parent->izq = this;
+                }
+            }
             this->parent = z->parent;
             z->parent = this->izq;
+            
             this->izq->izq = z;
             z->der = b;
         }

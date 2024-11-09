@@ -7,6 +7,21 @@
 #include "./SplayTree.cpp"
 #include "windows.h"
 
+void debugTree() {
+    SplayTree* tree = new SplayTree();
+    tree->root = new NodeSplay(76);
+    tree->root->izq = new NodeSplay(54);
+    tree->root->izq->parent = tree->root;
+    tree->root->izq->izq = new NodeSplay(1);
+    tree->root->izq->izq->parent = tree->root->izq;
+    tree->root->izq->izq->der = new NodeSplay(14);
+    tree->root->izq->izq->der->parent = tree->root->izq->izq;
+    tree->root->izq->izq->der->der = new NodeSplay(46);
+    tree->root->izq->izq->der->der->parent = tree->root->izq->izq->der;
+    tree->search(46);
+    tree->root->imprimirGrafico();
+}
+
 int main(){
     SetConsoleOutputCP(CP_UTF8);
     // test de ABB tree
@@ -18,20 +33,19 @@ int main(){
         // search
         std::cout << root->search(a[i]) << " ";
     }
-    std::cout << "------------------------------------" << std::endl;
-    delete root;
-    SplayTree* tree = new SplayTree();
-    std::vector<int> b = {5, 8, 10, 9, 2};
-    for (int c : b) {
-        // insert
-        tree->insert(c);
-        tree->root->imprimirGrafico(); // para mostrar el estado f inal
-        std::cout<<"--------------------------------------------" << std::endl;
-    }
-    tree->search(5);
-    tree->root->imprimirGrafico(); // muestra el estado final
-    delete tree;
+    //std::cout << "------------------------------------" << std::endl;
+    //delete root;
+    //SplayTree* tree = new SplayTree();
+    //std::vector<int> b = {5, 8, 10, 9, 2};
+    //for (int c : b) {
+    //    // insert
+    //    tree->insert(c);
+    //    tree->root->imprimirGrafico(); // para mostrar el estado f inal
+    //    std::cout<<"--------------------------------------------" << std::endl;
+    //}
+    //tree->search(5);
+    //tree->root->imprimirGrafico(); // muestra el estado final
+    //delete tree;
+    debugTree();
 }
 
-void firstExperiment(int N) {    
-}
