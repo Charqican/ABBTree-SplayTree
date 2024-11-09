@@ -127,30 +127,54 @@ class NodeSplay {
         }
     private:
 
+        //void splay() {
+        //    NodeSplay* y = this->parent;
+        //    if (y == nullptr) { // caso base
+        //        return;
+        //    }
+        //    NodeSplay* z = y->parent;
+        //    int a = y->value;
+        //    // caso zig y zag
+        //    if (z == nullptr) {
+        //        if (this->value < a) {
+        //            zig();
+        //            return;
+        //        }
+        //        zag(); 
+        //        return;
+        //    }
+        //    int b = z->value;
+//
+        //    if (this->value < a && a < b ) zigZig();
+        //    else if (this->value < a && a > b) zagZig();
+        //    else if (this-> value > a && a > b) zagZag();
+        //    else zigZag();
+        //    splay();
+        //}
+
+
         void splay() {
-            NodeSplay* y = this->parent;
-            if (y == nullptr) { // caso base
-                return;
-            }
-            NodeSplay* z = y->parent;
-            int a = y->value;
-            // caso zig y zag
-            if (z == nullptr) {
-                if (this->value < a) {
-                    zig();
+            while(this->parent != nullptr) {
+                NodeSplay* y = this->parent;
+                NodeSplay* z = y->parent;
+                int a = y->value;
+                if (z == nullptr) {
+                    if (this->value < a) {
+                        zig();
+                        return;
+                    }
+                    zag(); 
                     return;
                 }
-                zag(); 
-                return;
+                int b = z->value;
+                if (this->value < a && a < b ) zigZig();
+                else if (this->value < a && a > b) zagZig();
+                else if (this-> value > a && a > b) zagZag();
+                else zigZag();
             }
-            int b = z->value;
-
-            if (this->value < a && a < b ) zigZig();
-            else if (this->value < a && a > b) zagZig();
-            else if (this-> value > a && a > b) zagZag();
-            else zigZag();
-            splay();
+            return;
         }
+
 
         // creo que no es necesario implementar las 6, pero el enunciado asi lo pedia.
         void zigZig() {
