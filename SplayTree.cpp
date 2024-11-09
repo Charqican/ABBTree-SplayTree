@@ -46,7 +46,7 @@ class NodeSplay {
             // si value es vacio, insertamos en este nodo.
             // caso para nodo inicializado vacio (root).
             if (value == element) {
-                std::cout<< "Insert: Value was the same: " << element << std::endl;
+                //std::cout<< "Insert: Value was the same: " << element << std::endl;
                 return nullptr;   
             }
 
@@ -57,7 +57,7 @@ class NodeSplay {
                     izq = new NodeSplay(element); // creamos el nodo de la izquierda
                     izq->parent = this; // seteamos el parent
                     NodeSplay* newRoot = izq; 
-                    std::cout<< "Insert: " << element << std::endl;
+                    //std::cout<< "Insert: " << element << std::endl;
                     izq->splay(); // le aplicamos splay a este nodo // 
                     return newRoot;
 
@@ -70,7 +70,7 @@ class NodeSplay {
                     der = new NodeSplay(element);
                     der->parent = this;
                     NodeSplay* newRoot = der; // el nodo apunto hacia otro lado, hacemos una copia.
-                    std::cout<< "Insert: " << element << std::endl;
+                    //std::cout<< "Insert: " << element << std::endl;
                     der->splay();
                     return newRoot;
                 } else {
@@ -206,7 +206,6 @@ class NodeSplay {
         //y(a, x(b, c)) -> x(y(a, b), c)
         void zag() {
             //callImprimirGrafico();
-            std::cout <<"Zag: "<< this->value<< std::endl;
             NodeSplay* y = this->parent;
             NodeSplay* yParent =  y->parent;
 
@@ -229,7 +228,6 @@ class NodeSplay {
         // y(x(a, b), c)-> x(a, y(b, c))
         void zig() {
             //callImprimirGrafico();
-            std::cout <<"Zig: " <<this->value << std::endl;
             NodeSplay* y = this->parent; // y parent de x
             NodeSplay* yParent = y->parent; // z abuelo de x, puede ser null.
 
