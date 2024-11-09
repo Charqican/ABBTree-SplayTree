@@ -20,8 +20,27 @@ class NodeSplay {
             if (der!= nullptr) delete der;
         }
 
+
+        NodeSplay* iterativeSearch(int element) {
+            NodeSplay* current = this;
+            while(current != nullptr) {
+                if (current->value == element){
+                    current->splay();
+                    return current;
+                }
+
+                if(element < current->value) {
+                    current = current->izq;  
+                } else {
+                    current = current->der; 
+                }
+            }
+            return nullptr;
+        }
+
         NodeSplay* search(int element) {
             // casos bases 
+            
             if (value == element) {
                 this->splay();
                 return this;
@@ -172,7 +191,6 @@ class NodeSplay {
                 else if (this-> value > a && a > b) zagZag();
                 else zigZag();
             }
-            return;
         }
 
 
@@ -295,10 +313,11 @@ class SplayTree {
             
             root = newRoot;
         }
+        
 
         bool search(int element) {
             if (root == nullptr) return false;
-            NodeSplay* newRoot = root->search(element);
+            NodeSplay* newRoot = root->iterativeSearch(element);
             if (newRoot == nullptr) return false; // fallo la busqueda
             root = newRoot;
             return true;
