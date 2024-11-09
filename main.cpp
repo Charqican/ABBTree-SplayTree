@@ -76,14 +76,15 @@ int main(){
     std::vector<int> a = {10, 5, 3, 1, 8, 3, 8, 10, 3, 15, 17, 19, 6};
 
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 100000 ; i++) {
         // insert
         root->iterativeInsert(i);
         // search
-        std::cout << root->iterativeSearch(i) << " ";
-        root->imprimirGrafico();
+        root->iterativeSearch(i);
+        //std::cout <<  << " ";
+        //root->imprimirGrafico();
     }
-    delete root;
+    //delete root;
     //std::cout << "------------------------------------" << std::endl;
     //delete root;
     //SplayTree* tree = new SplayTree();
