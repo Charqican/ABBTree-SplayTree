@@ -313,7 +313,7 @@ class SplayTree {
             
             root = newRoot;
         }
-        
+
 
         bool search(int element) {
             if (root == nullptr) return false;
@@ -322,6 +322,7 @@ class SplayTree {
             root = newRoot;
             return true;
         }
+
 
         ~SplayTree() { // dijo mi amigo chatgpt q era ineficiente esto.
             if (root != nullptr) delete root;

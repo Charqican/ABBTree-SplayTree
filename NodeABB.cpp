@@ -36,20 +36,20 @@ class NodeABB {
             }
         }
 
+        //bool search(int element) {
+        //    // casos bases de la recursion
+        //    if (value == -1) return false;
+        //    if (value == element) return true;
+        //    // revisar izq y der
+        //    bool l = false;
+        //    bool r = false;
+        //    if (der != nullptr) l = der->search(element);
+        //    if (izq != nullptr) r = izq->search(element);
+        //    return (l || r);
+        //}
+
+
         bool search(int element) {
-            // casos bases de la recursion
-            if (value == -1) return false;
-            if (value == element) return true;
-            // revisar izq y der
-            bool l = false;
-            bool r = false;
-            if (der != nullptr) l = der->search(element);
-            if (izq != nullptr) r = izq->search(element);
-            return (l || r);
-        }
-
-
-        bool iterativeSearch(int element) {
             NodeABB* current = this;
             int iteration = 0;
             while (current != nullptr) {
@@ -66,7 +66,7 @@ class NodeABB {
         }
 
 
-        void iterativeInsert(int element) {
+        void insert(int element) {
             // Caso especial: si el nodo raíz está vacío, lo inicializamos
             if (this->value == -1) {
                 value = element;
@@ -101,23 +101,23 @@ class NodeABB {
         }
 
 
-        void insert(int element) {
-            if (value == -1) {
-                value = element;
-                return;
-            }
-
-            // si e < value: insertamos en el arbol de la izquierda
-            if (element < value) {
-                if (der == nullptr) der = new NodeABB(element);
-                else der->insert(element);
-                return;
-            }
-            // si e > value: insertamos en el arbol de la derecha
-            if (izq == nullptr) izq = new NodeABB(element);
-            else izq->insert(element);
-            return;
-        }
+        //void insert(int element) {
+        //    if (value == -1) {
+        //        value = element;
+        //        return;
+        //    }
+//
+        //    // si e < value: insertamos en el arbol de la izquierda
+        //    if (element < value) {
+        //        if (der == nullptr) der = new NodeABB(element);
+        //        else der->insert(element);
+        //        return;
+        //    }
+        //    // si e > value: insertamos en el arbol de la derecha
+        //    if (izq == nullptr) izq = new NodeABB(element);
+        //    else izq->insert(element);
+        //    return;
+        //}
 
 
         void imprimirGrafico(int espacio = 0, int nivel = 5) {
