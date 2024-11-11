@@ -14,27 +14,25 @@ class NodeABB {
         NodeABB() {};
         NodeABB(int v) : value(v) {};
 
-        ~NodeABB() {
+        void deletRoot() {
             // Usaremos una pila para hacer un recorrido iterativo
             std::stack<NodeABB*> nodeStack;
             nodeStack.push(this);
-
             while (!nodeStack.empty()) {
-                NodeABB* current = nodeStack.top();
+                NodeABB* node = nodeStack.top();
                 nodeStack.pop();
 
-                // Primero empujamos los hijos a la pila, si existen
-                if (current->izq != nullptr) {
-                    nodeStack.push(current->izq);
+                if (node->izq != nullptr) {
+                    nodeStack.push(node->izq);
                 }
-                if (current->der != nullptr) {
-                    nodeStack.push(current->der);
+                if (node->der != nullptr) {
+                    nodeStack.push(node->der);
                 }
-
                 // Luego eliminamos el nodo actual
-                delete current;
+                delete node;
             }
         }
+            
 
         //bool search(int element) {
         //    // casos bases de la recursion
@@ -99,25 +97,6 @@ class NodeABB {
                 }
             }
         }
-
-
-        //void insert(int element) {
-        //    if (value == -1) {
-        //        value = element;
-        //        return;
-        //    }
-//
-        //    // si e < value: insertamos en el arbol de la izquierda
-        //    if (element < value) {
-        //        if (der == nullptr) der = new NodeABB(element);
-        //        else der->insert(element);
-        //        return;
-        //    }
-        //    // si e > value: insertamos en el arbol de la derecha
-        //    if (izq == nullptr) izq = new NodeABB(element);
-        //    else izq->insert(element);
-        //    return;
-        //}
 
 
         void imprimirGrafico(int espacio = 0, int nivel = 5) {

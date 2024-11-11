@@ -2,6 +2,7 @@
 #include <vector>
 #include <iomanip> 
 #include <cmath>
+#include <stack>
 
 
 // TODO : Se debe limpiar el codigo y ordenar mas las condiciones. 
@@ -15,10 +16,6 @@ class NodeSplay {
         NodeSplay* parent = nullptr;
         NodeSplay(int v) : value(v) {}
         bool printTree = false;
-        ~NodeSplay() {
-            if (izq!=nullptr) delete izq;
-            if (der!= nullptr) delete der;
-        }
 
 
         NodeSplay* iterativeSearch(int element) {
@@ -37,6 +34,7 @@ class NodeSplay {
             }
             return nullptr;
         }
+
 
         NodeSplay* search(int element) {
             // casos bases 
@@ -57,7 +55,6 @@ class NodeSplay {
             } 
             return nullptr;
         }
-
 
         // Al crear un nodo, retornaremos una copia del valor actual del puntero izq/der.
         // esto porque al hacer splay() el parent tendra distintos hijos. 
@@ -98,6 +95,7 @@ class NodeSplay {
             }
             
         }
+
 
         void callImprimirGrafico() {
             if(!printTree) return;
@@ -146,31 +144,6 @@ class NodeSplay {
         }
     private:
 
-        //void splay() {
-        //    NodeSplay* y = this->parent;
-        //    if (y == nullptr) { // caso base
-        //        return;
-        //    }
-        //    NodeSplay* z = y->parent;
-        //    int a = y->value;
-        //    // caso zig y zag
-        //    if (z == nullptr) {
-        //        if (this->value < a) {
-        //            zig();
-        //            return;
-        //        }
-        //        zag(); 
-        //        return;
-        //    }
-        //    int b = z->value;
-//
-        //    if (this->value < a && a < b ) zigZig();
-        //    else if (this->value < a && a > b) zagZig();
-        //    else if (this-> value > a && a > b) zagZag();
-        //    else zigZag();
-        //    splay();
-        //}
-
 
         void splay() {
             while(this->parent != nullptr) {
@@ -215,15 +188,18 @@ class NodeSplay {
             if (c != nullptr) c->parent = z;
         }
 
+
         void zigZag() {
             this->zag();
             this->zig();
         }
 
+
         void zagZig() {
             this->zig();
             this->zag();
         }
+
 
         void zagZag() {
             this->zag();
@@ -324,8 +300,25 @@ class SplayTree {
         }
 
 
-        ~SplayTree() { // dijo mi amigo chatgpt q era ineficiente esto.
-            if (root != nullptr) delete root;
+        ~SplayTree() { 
+            if (this == nullptr) return;
+            std::stack<NodeSplay*> stack;
+            stack.push(root);
+            while (!stack.empty()) {
+                NodeSplay* node = stack.top();
+                stack.pop();
+
+                // Primero, metemos los hijos en la pila (si existen)
+                if (node->izq != nullptr) {
+                    stack.push(node->izq);
+                }
+                if (node->der != nullptr) {
+                    stack.push(node->der);
+                }
+
+                // Eliminamos el nodo
+                delete node;
+            }
         }
 
 };
