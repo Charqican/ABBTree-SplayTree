@@ -51,6 +51,7 @@ int testSplayTree() {
     std::cout << "Search: 76" <<std::endl;
     tree->search(76);
     tree->root->imprimirGrafico();
+    delete tree;
     return 0;
 }
 
@@ -95,7 +96,7 @@ void experiment1(int N, int M) {
               << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
               << " ms\n";
 
-    delete abbRoot;
+    abbRoot->deletRoot();
     delete splayTree;
 }
 
@@ -143,7 +144,7 @@ void experiment2(int N, int M) {
               << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
               << " ms\n";
 
-    delete abbRoot;
+    abbRoot->deletRoot();
     delete splayTree;
 }
 
@@ -189,7 +190,7 @@ void experiment3(int N, int M) {
               << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
               << " ms\n";
 
-    delete abbRoot;
+    abbRoot->deletRoot();
     delete splayTree;
 }
 
@@ -239,7 +240,7 @@ void experiment4(int N, int M = 100) {
               << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
               << " ms\n";
 
-    delete abbRoot;
+    abbRoot->deletRoot();
     delete splayTree;
 }
 
